@@ -18,7 +18,7 @@ This README is about data conversion. See also the [page on the OSM wiki](https:
 
 Sample .osm files (**not ready for import yet**) are in this [zip file](https://github.com/JesseCrocker/USFSTrailImport/raw/master/samples/selway/transform.osm.zip).
 
-Browse a slippy map of the data [here]()
+Browse a slippy map of the data [here](https://api.mapbox.com/styles/v1/jessecrocker/cj2ugplpf002u2ro8702qofb3.html?fresh=true&title=true&access_token=pk.eyJ1IjoiamVzc2Vjcm9ja2VyIiwiYSI6ImJHZ3BTQVUifQ.1m4Ny1SMveShHevw1orutw#6.94/38.483/-119.207)
 
 
 ## Prerequisites
