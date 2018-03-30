@@ -34,3 +34,4 @@ source/ranger_districts.geojson: source/S_USA.RangerDistrict
 # Processing data
 chunks: source/trails.geojson source/ranger_districts.geojson
 	mkdir -p chunks
+	python tools/split.py source/trails.geojson source/ranger_districts.geojson chunks
