@@ -3,7 +3,7 @@ all: chunks
 clean:
 	rm -rf source
 	rm -rf chunks
-	rm -rf osm
+	rm -rf chunks-osm
 
 # Trail data
 source/S_USA.TrailNFS_Publish.zip:
@@ -35,3 +35,11 @@ source/ranger_districts.geojson: source/S_USA.RangerDistrict
 chunks: source/trails.geojson source/ranger_districts.geojson
 	mkdir -p chunks
 	python tools/split.py source/trails.geojson source/ranger_districts.geojson chunks
+
+chunks-osm: chunks
+	mkdir -p chunks-osm
+	for f in chunks/*/*.geojson; do \
+		OUTPUTFILE=`echo $$f | sed -e 's/chunks/chunks-osm/' | sed -e 's/.geojson/.osm/'`; \
+		mkdir -p `dirname $$OUTPUTFILE`; \
+		python tools/ogr2osm.py --output $$OUTPUTFILE --translation usfs_trails $$f; \
+	done

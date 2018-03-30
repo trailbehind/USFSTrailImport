@@ -1,4 +1,3 @@
-
 .DS_Store
 chunks/*
 osm/*
@@ -6,3 +5,5 @@ data/*
 */node_modules/*
 .ipynb_checkpoints/
 source
+chunks-osm
+*.pyc
