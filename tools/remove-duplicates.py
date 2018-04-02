@@ -24,10 +24,15 @@ def check_duplicate(feature, retries=0):
     params['shape_match'] = "map_snap"
     params['search_radius'] = 10
     try:
-        r1 = requests.post(trace_route_url, data=json.dumps(params), timeout=30)
+        r1 = requests.post(trace_route_url, data=json.dumps(params), timeout=10)
     except:
-        logging.error("Routing request failed, retrying")
-        return check_duplicate(feature, retries=retries + 1)
+        logging.exception("Routing request failed, retrying. request:%s retries:%d" % 
+            (json.dumps(params), retries))
+        if retries < 3:
+            return check_duplicate(feature, retries=retries + 1)
+        else:
+            logging.error("Too many retries, giving up on request")
+            return False
 
     response = r1.json()
     if 'error_code' in response:
