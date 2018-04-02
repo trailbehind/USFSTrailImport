@@ -25,8 +25,8 @@ def check_duplicate(feature, retries=0):
     params['search_radius'] = 10
     try:
         r1 = requests.post(trace_route_url, data=json.dumps(params), timeout=30)
-    except requests.exceptions.ReadTimeout:
-        logging.error("Routing request timed out, retrying")
+    except:
+        logging.error("Routing request failed, retrying")
         return check_duplicate(feature, retries=retries + 1)
 
     response = r1.json()
