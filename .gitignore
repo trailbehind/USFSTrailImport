@@ -7,3 +7,5 @@ data/*
 source
 chunks-osm
 *.pyc
+chunks-duplicates
+chunks-deduplicated
