@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import logging
 from optparse import OptionParser
@@ -57,8 +58,19 @@ def split_trails(trails_path, regions_path, dest):
             if trail_region is not None:
                 if not region_id in region_trails:
                     region_trails[region_id] = []
-                region_trails[region_id].append(t)
-
+                if t['geometry']['type'] == "LineString":
+                    region_trails[region_id].append(t)
+                elif t['geometry']['type'] == "MultiLineString":
+                    for line in t['geometry']['coordinates']:
+                        region_trails[region_id].append({
+                            "properties": t["properties"],
+                            "geometry": {
+                                "type": "LineString",
+                                "coordinates": line
+                            }
+                        })
+                else:
+                    logging.error("Unexpected geometry type:" + t['geometry']['type'])
             trail_count += 1
             if trail_limit and trail_count > trail_limit:
                 break
