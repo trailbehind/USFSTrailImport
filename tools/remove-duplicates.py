@@ -13,7 +13,7 @@ from shapely.geometry import LineString
 
 ROUTING_SERVER_URL = "http://localhost:8002"
 
-def check_duplicate(feature):
+def check_duplicate(feature, retries=0):
     trace_route_url = ROUTING_SERVER_URL + "/trace_route"
 
     params = {}
@@ -23,7 +23,11 @@ def check_duplicate(feature):
     params['costing'] = "pedestrian"
     params['shape_match'] = "map_snap"
     params['search_radius'] = 10
-    r1 = requests.post(trace_route_url, data=json.dumps(params), timeout=30)
+    try:
+        r1 = requests.post(trace_route_url, data=json.dumps(params), timeout=30)
+    except requests.exceptions.ReadTimeout:
+        logging.error("Routing request timed out, retrying")
+        return check_duplicate(feature, retries=retries + 1)
 
     response = r1.json()
     if 'error_code' in response:
