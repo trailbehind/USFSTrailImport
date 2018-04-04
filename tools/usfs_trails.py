@@ -3,6 +3,8 @@ A translation function for USFS trails.
 https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml 
 '''
 
+import re
+import json
 
 def filterFeature(ogrfeature, fieldNames, reproject):
     if ogrfeature is None:
@@ -244,7 +246,7 @@ Enumerated Domain Value: NULL
 Enumerated Domain Value Definition: Not recorded
 Enumerated Domain Value Definition Source: U.S. Forest Service
     """
-    if 'ALLOWED_TE' in attrs:
+    if 'ALLOWED_TE' in attrs and attrs['ALLOWED_TE'] not in ("N/A", "N\/A"):
         values = attrs['ALLOWED_TE']
         tags['foot'] = 'yes' if '1' in values else 'no'
         tags['horse'] = 'yes' if '2' in values else 'no'
@@ -256,5 +258,129 @@ Enumerated Domain Value Definition Source: U.S. Forest Service
             tags['highway'] = 'track'
         else:
             tags['motor_vehicle'] = 'no'
-
+    elif 'MVUM_SYMBO' in attrs and \
+        int(attrs['MVUM_SYMBO']) > 0 and int(attrs['MVUM_SYMBO']) <= 17:
+        """Attribute Label: MVUM_SYMBOL
+Attribute Definition: This field indicates the vehicle class or combination of vehicle classes to which the trail is open (Trail open Yearlong or Seasonal: to all vehicles; to vehicles 50" or less in width; to motorcycles; special designation)
+Attribute Definition Source: U.S. Forest Service
+Attribute Domain Values:
+Enumerated Domain:
+Enumerated Domain Value: 1
+Enumerated Domain Value Definition: Roads open to all Vehicles, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 2
+Enumerated Domain Value Definition: Roads open to all Vehicles, Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 3
+Enumerated Domain Value Definition: Roads open to highway legal vehicles only, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 4
+Enumerated Domain Value Definition: Roads open to highway legal vehicles only, Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 5
+Enumerated Domain Value Definition: Trails open to all vehicles, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 6
+Enumerated Domain Value Definition: Trails open to all vehicles, Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 7
+Enumerated Domain Value Definition: Trails open to vehicles 50" or less in width, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 8
+Enumerated Domain Value Definition: Trails open to vehicles 50" or less in width, Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 9
+Enumerated Domain Value Definition: Trails open to motorcycles, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 10
+Enumerated Domain Value Definition: Trails open to motorcycles, Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 11
+Enumerated Domain Value Definition: Special Designation, Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 12
+Enumerated Domain Value Definition: Special Designation Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 13
+Enumerated Domain Value Definition: Interstate
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 14
+Enumerated Domain Value Definition: State or US Highway
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 15
+Enumerated Domain Value Definition: Other Public Road
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 16
+Enumerated Domain Value Definition: Wheeled OHV less than 50", Yearlong
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 17
+Enumerated Domain Value Definition: Wheeled OHV less than 50", Seasonal
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 18
+Enumerated Domain Value Definition: Other Public Trails - Not In Infra
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: 0
+Enumerated Domain Value Definition: Not populated for this Attribute Subset
+Enumerated Domain Value Definition Source: U.S. Forest Service
+Enumerated Domain:
+Enumerated Domain Value: NULL
+Enumerated Domain Value Definition: Not recorded
+Enumerated Domain Value Definition Source: U.S. Forest Service
+        """
+        val = int(attrs['MVUM_SYMBO'])
+        if val == 1 or val == 2:
+            tags['highway'] = "unclassified"
+            tags['motor_vehicle'] = 'yes'
+            tags['motorcyle'] = "yes"
+            tags['atv'] = "yes"
+        if val == 3 or val == 4:
+            tags['highway'] = "unclassified"
+            tags['motor_vehicle'] = 'yes'
+            tags['motorcyle'] = "yes"
+            tags['atv'] = "no"
+        elif val == 5 or val == 6:
+            tags['highway'] = "track"
+            tags['motor_vehicle'] = "yes"
+            tags['motorcyle'] = "yes"
+            tags['atv'] = "yes"
+        elif val == 7 or val == 8:
+            tags['highway'] = "track"
+            tags['atv'] = "yes"
+            tags['motorcyle'] = "yes"
+            tags['motor_vehicle'] = "no"
+        elif val == 9 or val == 10:
+            tags['highway'] = "track"
+            tags['motorcyle'] = "yes"
+            tags['atv'] = "no"
+            tags['motor_vehicle'] = "no"
+        elif val == 16 or val == 17:
+            tags['highway'] = "track"
+            tags['motorcyle'] = "yes"
+            tags['atv'] = "yes"
+            tags['motor_vehicle'] = "no"            
+    elif re.search("atv", tags['name'], flags=re.IGNORECASE):
+        tags['atv'] = 'designated'
+        tags['highway'] = "track"
+    else:
+        # print "Didnt match any access tags"
+        # print json.dumps(attrs)
+        pass
     return tags
