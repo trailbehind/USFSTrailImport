@@ -82,6 +82,7 @@ qa/duplicates.geojson: chunks-duplicates-osm
 			-sql "select * from lines"\
 			-f SQLite -dsco SPATIALITE=YES -append qa/duplicates.sqlite $$f; \
 	done
+	ogr2ogr -f GeoJSON qa/duplicates.geojson qa/duplicates.sqlite
 
 qa/combined.mbtiles: qa/new.geojson qa/duplicates.geojson	
 	tippecanoe --maximum-zoom=14 --minimum-zoom=5 -o qa/combined.mbtiles qa/new.geojson qa/duplicates.geojson
