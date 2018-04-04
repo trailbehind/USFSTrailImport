@@ -1,0 +1,58 @@
+{
+  "attribution": "USFS, GaiaGPS",
+  "bounds": [
+    -180,
+    -85.0511,
+    180,
+    85.0511
+  ],
+  "center": [
+    -119.4696,
+    37.815,
+    14
+  ],
+  "format": "pbf",
+  "vector_layers": [
+    {
+      "id": "new",
+      "description": "New trails",
+      "minzoom": 5,
+      "maxzoom": 14,
+      "fields": {
+        "name": "String",
+        "highway": "String",
+        "ref": "String",
+        "surface": "String",
+        "foot": "String",
+        "horse": "String",
+        "motorcycle":"String",
+        "atv":"String",
+        "motor_vehicle":"String"
+      }
+    },
+    {
+      "id": "duplicate",
+      "description": "Trails already in OSM",
+      "minzoom": 4,
+      "maxzoom": 22,
+      "fields": {
+        "name": "String",
+        "highway": "String",
+        "ref": "String",
+        "surface": "String",
+        "foot": "String",
+        "horse": "String",
+        "motorcycle":"String",
+        "atv":"String",
+        "motor_vehicle":"String"
+      }
+    }
+  ],
+  "maxzoom": 14,
+  "minzoom": 0,
+  "name": "USFS road import data preview",
+  "tiles": [
+    "https://s3.amazonaws.com/statictiles.gaiagps.com/usfs-trail-import/{z}/{x}/{y}.pbf"
+  ],
+  "tilejson": "2.0.0"
+}
