@@ -1,13 +1,7 @@
 '''
-A translation function for USFS trails. https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml 
-
+A translation function for USFS trails. 
+https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml 
 '''
-
-
-from osgeo import ogr
-import re
-import urllib
-import json
 
 
 def filterFeature(ogrfeature, fieldNames, reproject):
@@ -16,7 +10,7 @@ def filterFeature(ogrfeature, fieldNames, reproject):
     trailType = ogrfeature.GetFieldAsString("TRAIL_TYPE")
     if trailType == "TERRA":
         return ogrfeature
-    else:
+    else: #SNOW and WATER
         return
 
     
@@ -29,6 +23,7 @@ def filterTags(attrs):
 
     if 'TRAIL_NO' in attrs:
         tags['ref'] = attrs['TRAIL_NO']#[1:] # this is necesary to make trail numbers match usgs maps, at least in MT/ID
+
     if 'TRAIL_NAME' in attrs:
         tags['name'] = attrs['TRAIL_NAME'].lower().title()\
         .replace("Nst", "NST")\
@@ -92,7 +87,11 @@ Enumerated Domain Value Definition: Not recorded for this trail segment.
 Enumerated Domain Value Definition Source: U.S. Forest Service
     """
     if 'TRAIL_CLAS' in attrs:
-        pass
+        try:
+            if int(attrs['TRAIL_CLAS']) in (4, 5):
+                tags['highway'] = 'footway'
+        except:
+            pass
     """
 Attribute Label: TRAIL_SURFACE
 Attribute Definition: The predominant surface type the user would expect to encounter on the trail or trail segment.

@@ -9,3 +9,5 @@ chunks-osm
 *.pyc
 chunks-duplicates
 chunks-deduplicated
+chunks-duplicates-osm
+qa

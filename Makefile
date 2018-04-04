@@ -4,6 +4,8 @@ clean:
 	rm -rf source
 	rm -rf chunks
 	rm -rf chunks-osm
+	rm -rf chunks-duplicates-osm
+	rm -rf qa
 
 # Trail data
 source/S_USA.TrailNFS_Publish.zip:
@@ -50,7 +52,36 @@ chunks-deduplicated: chunks
 chunks-osm: chunks-deduplicated
 	mkdir -p chunks-osm
 	for f in chunks-deduplicated/*/*.geojson; do \
-		OUTPUTFILE=`echo $$f | sed -e 's/chunks/chunks-osm/' | sed -e 's/.geojson/.osm/'`; \
+		OUTPUTFILE=`echo $$f | sed -e 's/chunks-deduplicated/chunks-osm/' | sed -e 's/.geojson/.osm/'`; \
 		mkdir -p `dirname $$OUTPUTFILE`; \
 		python tools/ogr2osm.py --output $$OUTPUTFILE --translation usfs_trails $$f; \
 	done
+
+#QA
+chunks-duplicates-osm: chunks-deduplicated
+	mkdir -p chunks-duplicates-osm
+	for f in chunks-duplicates/*/*.geojson; do \
+		OUTPUTFILE=`echo $$f | sed -e 's/chunks-duplicates/chunks-duplicates-osm/' | sed -e 's/.geojson/.osm/'`; \
+		mkdir -p `dirname $$OUTPUTFILE`; \
+		python tools/ogr2osm.py --output $$OUTPUTFILE --translation usfs_trails $$f; \
+	done
+
+qa/new.geojson: chunks-osm
+	mkdir -p qa
+	for f in chunks-osm/*/*.osm; do \
+		OSM_USE_CUSTOM_INDEXING=NO OSM_CONFIG_FILE=osm2ogr.conf ogr2ogr \
+			-sql "select * from lines"\
+			-f SQLite -dsco SPATIALITE=YES -append qa/new.sqlite $$f; \
+	done
+	ogr2ogr -f GeoJSON qa/new.geojson qa/new.sqlite
+
+qa/duplicates.geojson: chunks-duplicates-osm
+	mkdir -p qa
+	for f in chunks-duplicates-osm/*/*.osm; do \
+		OSM_USE_CUSTOM_INDEXING=NO OSM_CONFIG_FILE=osm2ogr.conf ogr2ogr \
+			-sql "select * from lines"\
+			-f SQLite -dsco SPATIALITE=YES -append qa/duplicates.sqlite $$f; \
+	done
+
+qa/combined.mbtiles: qa/new.geojson qa/duplicates.geojson	
+	tippecanoe --maximum-zoom=14 --minimum-zoom=5 -o qa/combined.mbtiles qa/new.geojson qa/duplicates.geojson
