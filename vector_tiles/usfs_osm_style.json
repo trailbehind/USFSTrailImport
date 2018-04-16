@@ -1,0 +1,39 @@
+{
+  "version": 8,
+  "name": "usfs-osm",
+  "interaction-layers": [],
+  "details-template": {},
+  "center": [
+    -104.673828,
+    39.849312
+  ],
+  "zoom": 5,
+  "bearing": 0,
+  "pitch": 0,
+  "sources": {
+    "trails": {
+      "type": "vector",
+      "tiles": [
+        "https://s3.amazonaws.com/statictiles.gaiagps.com/usfs-trail-import/{z}/{x}/{y}.pbf"
+      ],
+      "minzoom": 0,
+      "maxzoom": 14
+    }
+  },
+  "glyphs": "https://static.gaiagps.com/GaiaTopoGL/glyphs/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "new",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "trails",
+      "paint": {
+        "line-width": 3,
+        "line-color": "rgba(242, 14, 14, 1)"
+      },
+      "minzoom": 0,
+      "maxzoom": 24
+    }
+  ],
+  "id": "gaia.usfs_osm"
+}
