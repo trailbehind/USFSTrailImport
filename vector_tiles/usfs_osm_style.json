@@ -23,16 +23,210 @@
   "glyphs": "https://static.gaiagps.com/GaiaTopoGL/glyphs/{fontstack}/{range}.pbf",
   "layers": [
     {
-      "id": "new",
+      "id": "duplicate-trails-name",
+      "type": "symbol",
+      "source": "trails",
+      "source-layer": "duplicates",
+      "paint": {
+        "text-color": "rgba(226, 218, 218, 1)",
+        "text-translate-anchor": "map",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(224, 229, 0, 1)"
+      },
+      "layout": {
+        "visibility": "visible",
+        "text-field": "{name}",
+        "text-font": [
+          "Regular"
+        ],
+        "symbol-placement": "line",
+        "text-size": 14,
+        "text-allow-overlap": false,
+        "text-pitch-alignment": "map",
+        "text-max-angle": 100,
+        "text-rotation-alignment": "map",
+        "text-ignore-placement": false,
+        "text-max-width": 25,
+        "text-keep-upright": true,
+        "text-letter-spacing": 0,
+        "symbol-avoid-edges": true
+      }
+    },
+    {
+      "id": "new-trails-name",
+      "type": "symbol",
+      "source": "trails",
+      "source-layer": "new",
+      "paint": {
+        "text-color": "rgba(226, 218, 218, 1)",
+        "text-translate-anchor": "map",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(5, 161, 225, 1)"
+      },
+      "layout": {
+        "visibility": "visible",
+        "text-field": "{name}",
+        "text-font": [
+          "Regular"
+        ],
+        "symbol-placement": "line",
+        "text-size": 14,
+        "text-allow-overlap": false,
+        "text-pitch-alignment": "map",
+        "text-max-angle": 100,
+        "text-rotation-alignment": "map",
+        "text-ignore-placement": false,
+        "text-max-width": 25,
+        "text-keep-upright": true,
+        "text-letter-spacing": 0,
+        "symbol-avoid-edges": true
+      }
+    },
+    {
+      "id": "duplicate-trails-track",
       "type": "line",
       "source": "trails",
-      "source-layer": "trails",
+      "source-layer": "duplicates",
       "paint": {
-        "line-width": 3,
-        "line-color": "rgba(242, 14, 14, 1)"
+        "line-color": "rgba(224, 229, 0, 1)",
+        "line-width": 2
       },
-      "minzoom": 0,
-      "maxzoom": 24
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "track"
+        ]
+      ]
+    },
+    {
+      "id": "new-trails-track",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "new",
+      "paint": {
+        "line-color": "rgba(16, 157, 226, 1)",
+        "line-width": 2
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "track"
+        ]
+      ]
+    },
+    {
+      "id": "duplicate-trails-footway",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "duplicates",
+      "paint": {
+        "line-color": "rgba(224, 229, 0, 1)",
+        "line-width": 2,
+        "line-opacity": 0.5,
+        "line-dasharray": [
+          0.5,
+          0.5
+        ]
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "footway"
+        ]
+      ]
+    },
+    {
+      "id": "new-trails-footway",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "new",
+      "paint": {
+        "line-color": "rgba(16, 157, 226, 1)",
+        "line-width": 2,
+        "line-opacity": 0.5,
+        "line-dasharray": [
+          0.5,
+          0.5
+        ]
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "footway"
+        ]
+      ]
+    },
+    {
+      "id": "duplicate-trails-paths",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "duplicates",
+      "paint": {
+        "line-color": "rgba(224, 229, 0, 1)",
+        "line-width": 2,
+        "line-opacity": 0.5,
+        "line-dasharray": [
+          3,
+          3
+        ]
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "path"
+        ]
+      ]
+    },
+    {
+      "id": "new-trails-paths",
+      "type": "line",
+      "source": "trails",
+      "source-layer": "new",
+      "paint": {
+        "line-color": "rgba(16, 157, 226, 1)",
+        "line-width": 2,
+        "line-opacity": 0.5,
+        "line-dasharray": [
+          3,
+          3
+        ]
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "highway",
+          "path"
+        ]
+      ]
     }
   ],
   "id": "gaia.usfs_osm"
