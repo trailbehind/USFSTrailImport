@@ -1,6 +1,6 @@
 '''
-A translation function for USFS trails. 
-https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml 
+A translation function for USFS trails.
+https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml
 '''
 
 import re
@@ -15,7 +15,7 @@ def filterFeature(ogrfeature, fieldNames, reproject):
     else: #SNOW and WATER
         return
 
-    
+
 def filterTags(attrs):
     if not attrs:
         return
@@ -30,6 +30,8 @@ def filterTags(attrs):
         tags['name'] = attrs['TRAIL_NAME'].lower().title()\
         .replace("Nst", "NST")\
         .replace("Nht", "NHT")
+    else:
+        tags['name'] = ""
     """
 Attribute Label: NATIONAL_TRAIL_DESIGNATION
 Attribute Definition: The national designation assigned to the trail or trail segment. This includes designations by federal statute for National Historic Trails (NHT), National Scenic Trails (NST), Connecting or Side Trails (C-S), and National Recreation Trails (NRT); and also includes National Millennium Trails (NMT) and Millennium Legacy Trails (MLT).
@@ -251,7 +253,7 @@ Enumerated Domain Value Definition Source: U.S. Forest Service
         tags['foot'] = 'yes' if '1' in values else 'no'
         tags['horse'] = 'yes' if '2' in values else 'no'
         tags['bicycle'] = 'yes' if '3' in values else 'no'
-        tags['motorcyle'] = 'yes' if '4' in values else 'no'
+        tags['motorcycle'] = 'yes' if '4' in values else 'no'
         tags['atv'] = 'yes' if '5' in values else 'no'
         if '6' in values:
             tags['motor_vehicle'] = 'yes'
@@ -349,33 +351,33 @@ Enumerated Domain Value Definition Source: U.S. Forest Service
         if val == 1 or val == 2:
             tags['highway'] = "unclassified"
             tags['motor_vehicle'] = 'yes'
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['atv'] = "yes"
         if val == 3 or val == 4:
             tags['highway'] = "unclassified"
             tags['motor_vehicle'] = 'yes'
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['atv'] = "no"
         elif val == 5 or val == 6:
             tags['highway'] = "track"
             tags['motor_vehicle'] = "yes"
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['atv'] = "yes"
         elif val == 7 or val == 8:
             tags['highway'] = "track"
             tags['atv'] = "yes"
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['motor_vehicle'] = "no"
         elif val == 9 or val == 10:
             tags['highway'] = "track"
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['atv'] = "no"
             tags['motor_vehicle'] = "no"
         elif val == 16 or val == 17:
             tags['highway'] = "track"
-            tags['motorcyle'] = "yes"
+            tags['motorcycle'] = "yes"
             tags['atv'] = "yes"
-            tags['motor_vehicle'] = "no"            
+            tags['motor_vehicle'] = "no"
     elif re.search("atv", tags['name'], flags=re.IGNORECASE):
         tags['atv'] = 'designated'
         tags['highway'] = "track"
